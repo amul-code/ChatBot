@@ -3,7 +3,7 @@ from nltk.stem import WordNetLemmatizer
 lemmatizer = WordNetLemmatizer()
 import pickle
 import numpy as np
-
+#importing Keras
 from keras.models import load_model
 model = load_model('chatbot_model.h5')
 import json
@@ -12,7 +12,7 @@ intents = json.loads(open('intents.json').read())
 words = pickle.load(open('words.pkl','rb'))
 classes = pickle.load(open('classes.pkl','rb'))
 
-
+#Clean_Function
 def clean_up_sentence(sentence):
     # tokenize the pattern - split words into array
     sentence_words = nltk.word_tokenize(sentence)
@@ -21,7 +21,7 @@ def clean_up_sentence(sentence):
     return sentence_words
 
 # return bag of words array: 0 or 1 for each word in the bag that exists in the sentence
-
+#Sentence
 def bow(sentence, words, show_details=True):
     # tokenize the pattern
     sentence_words = clean_up_sentence(sentence)
@@ -35,7 +35,7 @@ def bow(sentence, words, show_details=True):
                 if show_details:
                     print ("found in bag: %s" % w)
     return(np.array(bag))
-
+#Taking Model
 def predict_class(sentence, model):
     # filter out predictions below a threshold
     p = bow(sentence, words,show_details=False)
@@ -48,7 +48,7 @@ def predict_class(sentence, model):
     for r in results:
         return_list.append({"intent": classes[r[0]], "probability": str(r[1])})
     return return_list
-
+#Json File Call inti
 def getResponse(ints, intents_json):
     tag = ints[0]['intent']
     list_of_intents = intents_json['intents']
@@ -57,7 +57,7 @@ def getResponse(ints, intents_json):
             result = random.choice(i['responses'])
             break
     return result
-
+#response Function
 def chatbot_response(msg):
     ints = predict_class(msg, model)
     res = getResponse(ints, intents)
@@ -68,7 +68,7 @@ def chatbot_response(msg):
 import tkinter
 from tkinter import *
 
-
+##sending massege
 def send():
     msg = EntryBox.get("1.0",'end-1c').strip()
     EntryBox.delete("0.0",END)
